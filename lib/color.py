@@ -9,6 +9,7 @@ objects.
 #ceyda
 #samedlutfen
 #ceyda2.deneme
+#son denemem aksel
 #-----------------------------------------------------------------------
 
 class Color:
