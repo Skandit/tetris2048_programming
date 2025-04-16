@@ -7,6 +7,7 @@ objects.
 #aksel
 #aksel2.deneme
 #ceyda
+#samedlutfen
 #-----------------------------------------------------------------------
 
 class Color:
