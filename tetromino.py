@@ -64,6 +64,8 @@ class Tetromino:
          occupied_cells.append((1,1))
          occupied_cells.append((2,1))
          occupied_cells.append((1,2))
+      
+      
          
       # create a matrix of numbered tiles based on the shape of this tetromino
       self.tile_matrix = np.full((n, n), None)
