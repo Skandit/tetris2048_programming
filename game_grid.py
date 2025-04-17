@@ -129,4 +129,26 @@ class GameGrid:
                 if self.tile_matrix[y][x] is not None:
                     return True
     return False
+   
+   def clear_full_rows(self):
+      
+        score_gain = 0
+        new_rows = []
 
+       
+        for row in range(self.grid_height):
+            row_tiles = list(self.tile_matrix[row])
+            if all(tile is not None for tile in row_tiles):
+                for tile in row_tiles:
+                    score_gain += tile.value
+            else:
+                new_rows.append(row_tiles)
+       
+        num_cleared = self.grid_height - len(new_rows)
+        for _ in range(num_cleared):
+            new_rows.append([None] * self.grid_width)
+
+        for r in range(self.grid_height):
+            self.tile_matrix[r] = new_rows[r]
+
+        return score_gain
