@@ -36,9 +36,21 @@ class Tetromino:
          occupied_cells.append((1, 1))
          occupied_cells.append((1, 2))
          occupied_cells.append((2, 2))
-      elif sself.type == 'deneme':
-         n = 3
-
+      elif self.type == 'J':
+         n=3
+         #shape of tetromino J in initial state
+         occupied_cells.append((0,2))  #(column_index, row_index)
+         occupied_cells.append((1,0))
+         occupied_cells.append((1,1))
+         occupied_cells.append((1,2))
+      elif self.type == 'L':
+         n=3
+         #shape of tetromino L in initial state
+         occupied_cells.append((1,0))  #(column_index, row_index)
+         occupied_cells.append((1,1))
+         occupied_cells.append((1,2))
+         occupied_cells.append((2,2))
+         
       # create a matrix of numbered tiles based on the shape of this tetromino
       self.tile_matrix = np.full((n, n), None)
       # create the four tiles (minos) of this tetromino and place these tiles
