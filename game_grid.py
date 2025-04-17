@@ -115,3 +115,18 @@ class GameGrid:
                   self.game_over = True
       # return the value of the game_over flag
       return self.game_over
+   def does_tetromino_collide(self, tetromino):
+    for i in range(len(tetromino.tile_matrix)):
+        for j in range(len(tetromino.tile_matrix[i])):
+            tile = tetromino.tile_matrix[i][j]
+            if tile is not None:
+                x = tetromino.bottom_left_position.x + j
+                y = tetromino.bottom_left_position.y + i
+
+                if not self.is_inside(y, x):
+                    return True
+
+                if self.tile_matrix[y][x] is not None:
+                    return True
+    return False
+
