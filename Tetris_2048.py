@@ -69,7 +69,8 @@ def start():
          # and the position of the bottom left cell in this matrix
          tiles, pos = current_tetromino.get_min_bounded_tile_matrix(True)
          # update the game grid by locking the tiles of the landed tetromino
-         game_over = grid.update_grid(tiles, pos)
+         game_over,gained = grid.update_grid(tiles, pos)
+         #!!!!!! score += gained
          # end the main game loop if the game is over
          if game_over:
             break

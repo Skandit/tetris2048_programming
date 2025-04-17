@@ -113,8 +113,10 @@ class GameGrid:
                # the game is over if any placed tile is above the game grid
                else:
                   self.game_over = True
+      gained_score = self.clear_full_rows()
       # return the value of the game_over flag
-      return self.game_over
+      return self.game_over, gained_score
+   
    def does_tetromino_collide(self, tetromino):
     for i in range(len(tetromino.tile_matrix)):
         for j in range(len(tetromino.tile_matrix[i])):
