@@ -120,8 +120,8 @@ class GameGrid:
         for j in range(len(tetromino.tile_matrix[i])):
             tile = tetromino.tile_matrix[i][j]
             if tile is not None:
-                x = tetromino.bottom_left_position.x + j
-                y = tetromino.bottom_left_position.y + i
+                x = tetromino.bottom_left_cell.x + j
+                y = tetromino.bottom_left_cell.y + i
 
                 if not self.is_inside(y, x):
                     return True
