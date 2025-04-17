@@ -142,7 +142,7 @@ class GameGrid:
             row_tiles = list(self.tile_matrix[row])
             if all(tile is not None for tile in row_tiles):
                 for tile in row_tiles:
-                    score_gain += tile.value
+                    score_gain += tile.number
             else:
                 new_rows.append(row_tiles)
        
