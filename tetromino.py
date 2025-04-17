@@ -206,3 +206,21 @@ class Tetromino:
                   break  # end the inner for loop
       # if this method does not end by returning False before this line
       return True  # this tetromino can be moved in the given direction
+   
+   def rotate_clockwise(self,game_grid):
+      old_matrix = self.tile_matrix
+      size = len(old_matrix)
+      new_matrix = []
+      for _ in range(size):
+         row = []
+         for _ in range(size):
+            row.append(None)
+         new_matrix.append(row)
+      for i in range(size):
+        for j in range(size):
+            new_matrix[j][size - 1 - i] = old_matrix[i][j]
+      # we try with new matrix
+      self.tile_matrix = new_matrix
+      # if collide, undo
+      if game_grid.does_tetromino_collide(self):
+        self.tile_matrix = old_matrix
