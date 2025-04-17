@@ -50,6 +50,20 @@ class Tetromino:
          occupied_cells.append((1,1))
          occupied_cells.append((1,2))
          occupied_cells.append((2,2))
+      elif self.type == 'S':
+         n=3
+         #shape of tetromino S in initial state
+         occupied_cells.append((0,1))  #(column_index, row_index)
+         occupied_cells.append((1,1))
+         occupied_cells.append((1,0))
+         occupied_cells.append((2,0))
+      elif self.type == 'T':
+         n=3
+         #shape of tetromino T in initial state
+         occupied_cells.append((0,1))  #(column_index, row_index)
+         occupied_cells.append((1,1))
+         occupied_cells.append((2,1))
+         occupied_cells.append((1,2))
          
       # create a matrix of numbered tiles based on the shape of this tetromino
       self.tile_matrix = np.full((n, n), None)
