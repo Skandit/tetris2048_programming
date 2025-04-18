@@ -173,9 +173,9 @@ class GameGrid:
                        if t_bot and t_top and t_bot.number == t_top.number:
                            
                            new_val = t_top.number * 2
-                           t_top.number = new_val
+                           t_bot.number = new_val
                           
-                           self.tile_matrix[row][col] = None
+                           self.tile_matrix[row+1][col] = None
                            
                            gained += new_val
                            merged_in_col = True
