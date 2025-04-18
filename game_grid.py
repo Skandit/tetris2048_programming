@@ -116,9 +116,9 @@ class GameGrid:
       
       merge_gain = self.merge_tiles()
       clear_gain = self.clear_full_rows()
-
+      free_gain = self.remove_free_tiles()
       # return the value of the game_over flag
-      return self.game_over, merge_gain + clear_gain   
+      return self.game_over, merge_gain + clear_gain + free_gain
    
    def does_tetromino_collide(self, tetromino):
     for i in range(len(tetromino.tile_matrix)):
@@ -181,4 +181,37 @@ class GameGrid:
                            merged_in_col = True
                            break  
            return gained
+
+   
+
+   def remove_free_tiles(self):
+        
+        gained = 0
+        H, W = self.grid_height, self.grid_width
+
+        
+        supported = set()
+        # en alt satır: toprağa direkt temas eden tile’lar
+        for c in range(W):
+            if self.tile_matrix[0][c] is not None:
+                supported.add((0, c))
+
+        # üst satırlarda: eğer herhangi bir bitişiği (alt, sol, sağ) destekleniyorsa desteklenir
+        for r in range(1, H):
+            for c in range(W):
+                if self.tile_matrix[r][c] is not None:
+                    if ((r-1, c) in supported or
+                        (r, c-1) in supported or
+                        (r, c+1) in supported):
+                        supported.add((r, c))
+
+        # 2) desteklenmeyenleri sil ve puanlarını topla
+        for r in range(H):
+            for c in range(W):
+                if (self.tile_matrix[r][c] is not None and
+                    (r, c) not in supported):
+                    gained += self.tile_matrix[r][c].number
+                    self.tile_matrix[r][c] = None
+
+        return gained
 
