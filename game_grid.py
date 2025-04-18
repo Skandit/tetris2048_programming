@@ -110,7 +110,7 @@ class GameGrid:
                pos.y = blc_position.y + (n_rows - 1) - row
                if self.is_inside(pos.y, pos.x):
                   self.tile_matrix[pos.y][pos.x] = tiles_to_lock[row][col]
-               # the game is over if any placed tile is above the game grid
+               # the game is over if any placed tile is above the game grid.
                else:
                   self.game_over = True
       
