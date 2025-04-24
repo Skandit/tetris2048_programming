@@ -92,34 +92,58 @@ class GameGrid:
          return False
       return True
 
+   def settle_above_merges(self, merge_rows):
+ 
+    H = self.grid_height
+    for col, mrow in merge_rows.items():
+        if mrow < 0:
+            continue
+       
+        buf = [self.tile_matrix[r][col]
+               for r in range(mrow+1, H)
+               if self.tile_matrix[r][col] is not None]
+       
+        for r in range(mrow+1, H):
+            self.tile_matrix[r][col] = None
+       
+        for i, tile in enumerate(buf):
+            self.tile_matrix[mrow+1 + i][col] = tile
+
+
    # A method that locks the tiles of a landed tetromino on the grid checking
    # if the game is over due to having any tile above the topmost grid row.
    # (This method returns True when the game is over and False otherwise.)
    def update_grid(self, tiles_to_lock, blc_position):
-      # necessary for the display method to stop displaying the tetromino
-      self.current_tetromino = None
-      # lock the tiles of the current tetromino (tiles_to_lock) on the grid
-      n_rows, n_cols = len(tiles_to_lock), len(tiles_to_lock[0])
-      for col in range(n_cols):
-         for row in range(n_rows):
-            # place each tile (occupied cell) onto the game grid
-            if tiles_to_lock[row][col] is not None:
-               # compute the position of the tile on the game grid
-               pos = Point()
-               pos.x = blc_position.x + col
-               pos.y = blc_position.y + (n_rows - 1) - row
-               if self.is_inside(pos.y, pos.x):
-                  self.tile_matrix[pos.y][pos.x] = tiles_to_lock[row][col]
-               # the game is over if any placed tile is above the game grid.
-               else:
-                  self.game_over = True
-      
-      merge_gain = self.merge_tiles()
-      clear_gain = self.clear_full_rows()
-      free_gain = self.remove_free_tiles()
-      # return the value of the game_over flag
-      return self.game_over, merge_gain + clear_gain + free_gain
+    self.current_tetromino = None
    
+    n_rows, n_cols = len(tiles_to_lock), len(tiles_to_lock[0])
+    for col in range(n_cols):
+        for row in range(n_rows):
+            t = tiles_to_lock[row][col]
+            if t:
+                x = blc_position.x + col
+                y = blc_position.y + (n_rows - 1) - row
+                if self.is_inside(y, x):
+                    self.tile_matrix[y][x] = t
+                else:
+                    self.game_over = True
+    if self.game_over:
+        return True, 0
+
+    total_gain = 0
+    
+    while True:
+        gain, merge_rows = self.merge_tiles_lowest()
+        if gain == 0:
+            break
+        total_gain += gain
+       
+        total_gain += self.clear_full_rows()
+        
+        self.settle_above_merges(merge_rows)
+
+    return self.game_over, total_gain
+
    def does_tetromino_collide(self, tetromino):
     for i in range(len(tetromino.tile_matrix)):
         for j in range(len(tetromino.tile_matrix[i])):
@@ -157,61 +181,33 @@ class GameGrid:
             self.tile_matrix[r] = new_rows[r]
 
         return score_gain
-   def merge_tiles(self):
-           
-           gained = 0
-           
-           for col in range(self.grid_width):
-               merged_in_col = True
-               
-               while merged_in_col:
-                   merged_in_col = False
-                   
-                   for row in range(self.grid_height - 1):
-                       t_bot = self.tile_matrix[row][col]
-                       t_top = self.tile_matrix[row + 1][col]
-                       if t_bot and t_top and t_bot.number == t_top.number:
-                           
-                           new_val = t_top.number * 2
-                           t_bot.number = new_val
-                          
-                           self.tile_matrix[row+1][col] = None
-                           
-                           gained += new_val
-                           merged_in_col = True
-                           break  
-           return gained
+
+   def merge_tiles_lowest(self):
+   
+    gained = 0
+    merge_rows = {col: self.grid_height for col in range(self.grid_width)}
+
+    for col in range(self.grid_width):
+        merged = True
+        while merged:
+            merged = False
+            for row in range(self.grid_height - 1):
+                bot = self.tile_matrix[row][col]
+                top = self.tile_matrix[row + 1][col]
+                if bot and top and bot.number == top.number:
+                    bot.number *= 2
+                    self.tile_matrix[row + 1][col] = None
+                    gained += bot.number
+                    
+                    merge_rows[col] = min(merge_rows[col], row)
+                    merged = True
+                    break
+  
+    for col in list(merge_rows):
+        if merge_rows[col] == self.grid_height:
+            merge_rows[col] = -1
+    return gained, merge_rows
 
    
 
-   def remove_free_tiles(self):
-        
-        gained = 0
-        H, W = self.grid_height, self.grid_width
-
-        
-        supported = set()
-        # en alt satır: toprağa direkt temas eden tile’lar
-        for c in range(W):
-            if self.tile_matrix[0][c] is not None:
-                supported.add((0, c))
-
-        # üst satırlarda: eğer herhangi bir bitişiği (alt, sol, sağ) destekleniyorsa desteklenir
-        for r in range(1, H):
-            for c in range(W):
-                if self.tile_matrix[r][c] is not None:
-                    if ((r-1, c) in supported or
-                        (r, c-1) in supported or
-                        (r, c+1) in supported):
-                        supported.add((r, c))
-
-        # 2) desteklenmeyenleri sil ve puanlarını topla
-        for r in range(H):
-            for c in range(W):
-                if (self.tile_matrix[r][c] is not None and
-                    (r, c) not in supported):
-                    gained += self.tile_matrix[r][c].number
-                    self.tile_matrix[r][c] = None
-
-        return gained
-
+ 
