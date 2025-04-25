@@ -44,17 +44,29 @@ def start():
     grid.current_tetromino = current_tetromino
 
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
+    #holds the info if game is paused. 
+    is_paused = False
 
     while True:
         if stddraw.hasNextKeyTyped():
             key = stddraw.nextKeyTyped()
-            if key in ("left", "right", "down"):
-                current_tetromino.move(key, grid)
-            elif key == "r":
-                current_tetromino.rotate_clockwise(grid)
+            if key == "p":
+                is_paused = not is_paused
+            
+            elif not is_paused:
+                if key in ("left", "right", "down"):
+                    current_tetromino.move(key, grid)
+                elif key == "r":
+                    current_tetromino.rotate_clockwise(grid)
+                
             stddraw.clearKeysTyped()
+        
 
-        success = current_tetromino.move("down", grid)
+        
+
+        if not is_paused:
+            success = current_tetromino.move("down", grid)
+
         if not success:
             tiles, pos = current_tetromino.get_min_bounded_tile_matrix(True)
             game_over, gained = grid.update_grid(tiles, pos)
