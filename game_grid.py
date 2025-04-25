@@ -146,10 +146,8 @@ class GameGrid:
             break
         self.score += gain
        
-        self.score += self.clear_full_rows()
-        
         self.settle_above_merges(merge_rows)
-        
+
         while True:
             labels, num_labels = self.connected_blocks_labeling(self.tile_matrix, self.grid_width, self.grid_height)
             free_tiles = [[False for _ in range(self.grid_width)] for _ in range(self.grid_height)]
@@ -158,6 +156,7 @@ class GameGrid:
                 break
             self.down_free_tiles(free_tiles)
 
+        self.score += self.clear_full_rows()
 
     return self.game_over, self.score
 
