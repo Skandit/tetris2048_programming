@@ -25,22 +25,24 @@ class GameGrid:
       self.line_thickness = 0.002
       self.box_thickness = 10 * self.line_thickness
       self.score = 0
+      self.next_tetromino = None     # ekranın altındaki Next için
+        # Menü butonunun koordinatları:
+      self.menu_x, self.menu_y = grid_w + 1, grid_h - 5
+      self.menu_w, self.menu_h = 6, 3
+      self.panel_w = 8
+      self.panel_x = grid_w
+      self.panel_h = grid_h
 
 
    # A method for displaying the game grid
    def display(self):
-      # clear the background to empty_cell_color
-      stddraw.clear(self.empty_cell_color)
-      # draw the game grid
-      self.draw_grid()
-      # draw the current/active tetromino if it is not None
-      # (the case when the game grid is updated)
-      if self.current_tetromino is not None:
-         self.current_tetromino.draw()
-      # draw a box around the game grid
-      self.draw_boundaries()
-      # show the resulting drawing with a pause duration = 250 ms
-      stddraw.show(250)
+    stddraw.clear(self.empty_cell_color)
+    self.draw_panel()       # önce sağ paneli çiz
+    self.draw_grid()        # sonra oyun ızgarasını çiz
+    if self.current_tetromino:
+        self.current_tetromino.draw()
+    self.draw_boundaries()
+    stddraw.show(250)
 
    # A method for drawing the cells and the lines of the game grid
    def draw_grid(self):
@@ -52,7 +54,7 @@ class GameGrid:
                # draw this tile
                     self.tile_matrix[row][col].draw(Point(col, row))
       
-        self.draw_score(self.score)
+       
         
       
       # draw the inner lines of the game grid
@@ -214,12 +216,38 @@ class GameGrid:
             merge_rows[col] = -1
     return gained, merge_rows
    
-   def draw_score(self, score=0):
-        stddraw.setPenRadius(150)
-        stddraw.setPenColor(Color(255, 255, 255))
-        text_to_display = "Score: "+str(score)
-        stddraw.text(15.8, 18.8, text_to_display)
+  
 
-   
+   def draw_panel(self):
+    # 1) SCORE başlığı
+    stddraw.setPenColor(Color(255, 255, 255))
+    stddraw.setFontSize(40)
+    stddraw.text(self.panel_x + self.panel_w / 2,
+                 self.panel_h - 1, f"SCORE: {self.score}")
 
- 
+    # 2) MENU butonu
+    mw, mh = 6, 3
+    mx = self.panel_x + (self.panel_w - mw) / 2 - 0.5
+    my = self.panel_h - 6.5 -3.5
+    stddraw.setPenColor(Color(25, 200, 150))
+    stddraw.filledRectangle(mx, my, mw, mh)
+    stddraw.setPenColor(Color(255, 255, 255))
+    stddraw.setFontSize(24)
+    stddraw.text(mx + mw / 2, my + mh / 2, "MENU")
+
+    # 3) NEXT başlığı
+    stddraw.setPenColor(Color(255, 255, 255))
+    stddraw.setFontSize(20)
+    stddraw.text(self.panel_x + 2, 6, "NEXT TETROMINO:")
+
+    # 4) Next tetromino kutusunu çiz
+    if self.next_tetromino:
+        mat = self.next_tetromino.get_min_bounded_tile_matrix(False)
+        rows, cols = mat.shape
+        base_x, base_y = self.panel_x + 2, 1
+        for r in range(rows):
+            for c in range(cols):
+                tile = mat[r][c]
+                if tile:
+                    pos = Point(base_x + c, base_y + (rows - 1 - r))
+                    tile.draw(pos)
