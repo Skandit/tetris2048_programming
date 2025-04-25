@@ -37,8 +37,8 @@ class GameGrid:
    # A method for displaying the game grid
    def display(self):
     stddraw.clear(self.empty_cell_color)
-    self.draw_panel()       # önce sağ paneli çiz
-    self.draw_grid()        # sonra oyun ızgarasını çiz
+    self.draw_panel()     
+    self.draw_grid()        
     if self.current_tetromino:
         self.current_tetromino.draw()
     self.draw_boundaries()
@@ -219,35 +219,38 @@ class GameGrid:
   
 
    def draw_panel(self):
-    # 1) SCORE başlığı
+  
     stddraw.setPenColor(Color(255, 255, 255))
     stddraw.setFontSize(40)
-    stddraw.text(self.panel_x + self.panel_w / 2,
-                 self.panel_h - 1, f"SCORE: {self.score}")
+    stddraw.text(self.panel_x + self.panel_w / 2, self.panel_h - 1, f"SCORE: {self.score}")
 
-    # 2) MENU butonu
+
     mw, mh = 6, 3
-    mx = self.panel_x + (self.panel_w - mw) / 2 - 0.5
-    my = self.panel_h - 6.5 -3.5
+    mx = self.panel_x + (self.panel_w - mw) / 2
+    my = self.panel_h - 6.5  
     stddraw.setPenColor(Color(25, 200, 150))
     stddraw.filledRectangle(mx, my, mw, mh)
     stddraw.setPenColor(Color(255, 255, 255))
     stddraw.setFontSize(24)
     stddraw.text(mx + mw / 2, my + mh / 2, "MENU")
 
-    # 3) NEXT başlığı
+   
     stddraw.setPenColor(Color(255, 255, 255))
     stddraw.setFontSize(20)
     stddraw.text(self.panel_x + 2, 6, "NEXT TETROMINO:")
 
-    # 4) Next tetromino kutusunu çiz
+ 
     if self.next_tetromino:
         mat = self.next_tetromino.get_min_bounded_tile_matrix(False)
         rows, cols = mat.shape
-        base_x, base_y = self.panel_x + 2, 1
+
+        center_x = self.panel_x + self.panel_w / 2
+        base_y = 2  
+
         for r in range(rows):
             for c in range(cols):
                 tile = mat[r][c]
                 if tile:
-                    pos = Point(base_x + c, base_y + (rows - 1 - r))
+                    offset_x = center_x - cols / 2
+                    pos = Point(offset_x + c, base_y + (rows - 1 - r))
                     tile.draw(pos)
