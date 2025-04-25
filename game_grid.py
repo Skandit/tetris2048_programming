@@ -24,6 +24,8 @@ class GameGrid:
       # thickness values used for the grid lines and the grid boundaries
       self.line_thickness = 0.002
       self.box_thickness = 10 * self.line_thickness
+      self.score = 0
+
 
    # A method for displaying the game grid
    def display(self):
@@ -43,23 +45,27 @@ class GameGrid:
    # A method for drawing the cells and the lines of the game grid
    def draw_grid(self):
       # for each cell of the game grid
-      for row in range(self.grid_height):
-         for col in range(self.grid_width):
+        for row in range(self.grid_height):
+            for col in range(self.grid_width):
             # if the current grid cell is occupied by a tile
-            if self.tile_matrix[row][col] is not None:
+                if self.tile_matrix[row][col] is not None:
                # draw this tile
-               self.tile_matrix[row][col].draw(Point(col, row))
+                    self.tile_matrix[row][col].draw(Point(col, row))
+      
+        self.draw_score(self.score)
+        
+      
       # draw the inner lines of the game grid
-      stddraw.setPenColor(self.line_color)
-      stddraw.setPenRadius(self.line_thickness)
+        stddraw.setPenColor(self.line_color)
+        stddraw.setPenRadius(self.line_thickness)
       # x and y ranges for the game grid
-      start_x, end_x = -0.5, self.grid_width - 0.5
-      start_y, end_y = -0.5, self.grid_height - 0.5
-      for x in np.arange(start_x + 1, end_x, 1):  # vertical inner lines
+        start_x, end_x = -0.5, self.grid_width - 0.5
+        start_y, end_y = -0.5, self.grid_height - 0.5
+        for x in np.arange(start_x + 1, end_x, 1):  # vertical inner lines
          stddraw.line(x, start_y, x, end_y)
-      for y in np.arange(start_y + 1, end_y, 1):  # horizontal inner lines
-         stddraw.line(start_x, y, end_x, y)
-      stddraw.setPenRadius()  # reset the pen radius to its default value
+        for y in np.arange(start_y + 1, end_y, 1):  # horizontal inner lines
+            stddraw.line(start_x, y, end_x, y)
+            stddraw.setPenRadius()  # reset the pen radius to its default value
 
    # A method for drawing the boundaries around the game grid
    def draw_boundaries(self):
@@ -130,19 +136,19 @@ class GameGrid:
     if self.game_over:
         return True, 0
 
-    total_gain = 0
+    self.score = 0
     
     while True:
         gain, merge_rows = self.merge_tiles_lowest()
         if gain == 0:
             break
-        total_gain += gain
+        self.score += gain
        
-        total_gain += self.clear_full_rows()
+        self.score += self.clear_full_rows()
         
         self.settle_above_merges(merge_rows)
 
-    return self.game_over, total_gain
+    return self.game_over, self.score
 
    def does_tetromino_collide(self, tetromino):
     for i in range(len(tetromino.tile_matrix)):
@@ -207,6 +213,12 @@ class GameGrid:
         if merge_rows[col] == self.grid_height:
             merge_rows[col] = -1
     return gained, merge_rows
+   
+   def draw_score(self, score=0):
+        stddraw.setPenRadius(150)
+        stddraw.setPenColor(Color(255, 255, 255))
+        text_to_display = "Score: "+str(score)
+        stddraw.text(15.8, 18.8, text_to_display)
 
    
 
