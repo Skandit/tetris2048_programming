@@ -2,7 +2,7 @@ import lib.stddraw as stddraw  # used for displaying the game grid
 from lib.color import Color  # used for coloring the game grid
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
-
+import copy
 # A class for modeling the game grid
 class GameGrid:
    # A constructor for creating the game grid based on the given arguments
@@ -149,6 +149,15 @@ class GameGrid:
         self.score += self.clear_full_rows()
         
         self.settle_above_merges(merge_rows)
+        
+        while True:
+            labels, num_labels = self.connected_blocks_labeling(self.tile_matrix, self.grid_width, self.grid_height)
+            free_tiles = [[False for _ in range(self.grid_width)] for _ in range(self.grid_height)]
+            free_tiles, num_free = self.get_free_tiles(self.grid_height, self.grid_width, labels, free_tiles)
+            if num_free == 0:
+                break
+            self.down_free_tiles(free_tiles)
+
 
     return self.game_over, self.score
 
@@ -215,6 +224,96 @@ class GameGrid:
         if merge_rows[col] == self.grid_height:
             merge_rows[col] = -1
     return gained, merge_rows
+   
+   def get_free_tiles(self, grid_h, grid_w, labels, free_tiles):
+        total = 0
+        label_record = []
+        for i in range(grid_h):
+            for j in range(grid_w):
+                if labels[i, j] != 0 and labels[i, j] != 1:
+                    if i == 0:
+                        label_record.append(labels[i, j])
+                    if not label_record.count(labels[i, j]):
+                        free_tiles[i][j] = True
+                        total += 1
+        return free_tiles, total
+
+   def down_free_tiles(self, free_tiles):
+        for r in range(self.grid_height):
+            for c in range(self.grid_width):
+                if free_tiles[r][c]:
+                    new_tile = copy.deepcopy(self.tile_matrix[r][c])
+                    self.tile_matrix[r - 1][c] = new_tile
+                    dx, dy = 0, -1
+                    self.tile_matrix[r - 1][c].move(dx, dy)
+                    self.tile_matrix[r][c] = None
+
+   def connected_blocks_labeling(self, grid, grid_w, grid_h):
+        labels = np.zeros([grid_h, grid_w], dtype=int)
+        label_roots = []
+        label_id = 1
+
+        for row in range(grid_h):
+            for col in range(grid_w):
+                if grid[row, col] is None:
+                    continue
+
+                neighbors = self.find_neighbor_labels(labels, (col, row))
+                if len(neighbors) == 0:
+                    labels[row, col] = label_id
+                    label_roots.append(label_id)
+                    label_id += 1
+                else:
+                    labels[row, col] = min(neighbors)
+                    if len(neighbors) > 1:
+                        merge_set = set()
+                        for lbl in neighbors:
+                            merge_set.add(label_roots[lbl - 1])
+                        self.merge_label_groups(label_roots, merge_set)
+
+        self.normalize_label_indices(label_roots)
+
+        for row in range(grid_h):
+            for col in range(grid_w):
+                if grid[row, col] is None:
+                    continue
+                labels[row, col] = label_roots[labels[row, col] - 1]
+
+        return labels, len(set(label_roots))
+
+   def find_neighbor_labels(self, label_array, coords):
+        x, y = coords
+        neighbor_set = set()
+
+        if y > 0:
+            upper_lbl = label_array[y - 1, x]
+            if upper_lbl != 0:
+                neighbor_set.add(upper_lbl)
+
+        if x > 0:
+            left_lbl = label_array[y, x - 1]
+            if left_lbl != 0:
+                neighbor_set.add(left_lbl)
+
+        return neighbor_set
+
+   def normalize_label_indices(self, label_roots):
+        unique_roots = sorted(set(label_roots))
+        new_map = np.zeros(max(label_roots) + 1, dtype=int)
+        new_val = 1
+
+        for lbl in unique_roots:
+            new_map[lbl] = new_val
+            new_val += 1
+
+        for i in range(len(label_roots)):
+            label_roots[i] = new_map[label_roots[i]]
+
+   def merge_label_groups(self, label_list, merge_targets):
+        smallest = min(merge_targets)
+        for i in range(len(label_list)):
+            if label_list[i] in merge_targets:
+                label_list[i] = smallest
    
   
 

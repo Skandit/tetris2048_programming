@@ -1,6 +1,7 @@
 import lib.stddraw as stddraw  # used for drawing the tiles to display them
 from lib.color import Color  # used for coloring the tiles
-
+from point import Point
+import numpy as np
 # A class for modeling numbered tiles as in 2048
 class Tile:
    # Class variables shared among all Tile objects
@@ -11,14 +12,15 @@ class Tile:
    font_family, font_size = "Arial", 14
 
    # A constructor that creates a tile with 2 as the number on it
-   def __init__(self):
+   def __init__(self, position = Point(0, 0)):
       # set the number on this tile
-      self.number = 2
+      numbers = [2, 4]
+      self.number = int(np.random.choice(numbers,1))
       # set the colors of this tile
       self.background_color = Color(151, 178, 199)  # background (tile) color
       self.foreground_color = Color(0, 100, 200)  # foreground (number) color
       self.box_color = Color(0, 100, 200)  # box (boundary) color
-
+      self.position = Point(position.x, position.y)
    # A method for drawing this tile at a given position with a given length
    def draw(self, position, length=1):  # length defaults to 1
       # draw the tile as a filled square
@@ -34,3 +36,6 @@ class Tile:
       stddraw.setFontFamily(Tile.font_family)
       stddraw.setFontSize(Tile.font_size)
       stddraw.text(position.x, position.y, str(self.number))
+
+   def move(self, dx, dy):
+      self.position.translate(dx, dy)
