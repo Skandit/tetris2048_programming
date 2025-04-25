@@ -14,26 +14,13 @@ import random  # used for creating tetrominoes with random types (shapes)
 
 # The main function where this program starts execution
 def start():
-   # set the dimensions of the game grid
-   grid_h, grid_w = 20, 20
-   game_w = 12
-   # set the size of the drawing canvas (the displayed window)
-   canvas_h, canvas_w = 40 * grid_h, 40 * grid_w
-   stddraw.setCanvasSize(canvas_w, canvas_h)
-   # set the scale of the coordinate system for the drawing canvas
-   stddraw.setXscale(-0.5, grid_w - 0.5)
-   stddraw.setYscale(-0.5, grid_h - 0.5)
+    import random
+    from tetromino import Tetromino
+    from game_grid import GameGrid
+    import lib.stddraw as stddraw
 
-   # set the game grid dimension values stored and used in the Tetromino class
-   Tetromino.grid_height = grid_h
-   Tetromino.grid_width = game_w
-   # create the game grid
-   grid = GameGrid(grid_h, game_w)
-   # create the first tetromino to enter the game grid
-   # by using the create_tetromino function defined below
-   current_tetromino = create_tetromino()
-   grid.current_tetromino = current_tetromino
 
+<<<<<<<<< Temporary merge branch 1
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
    display_game_menu(grid_h, game_w)
@@ -86,9 +73,57 @@ def start():
          # by using the create_tetromino function defined below
          current_tetromino = create_tetromino()
          grid.current_tetromino = current_tetromino
+=========
+    grid_h = 20
+    grid_w = 12
+    panel_w = 8
+    canvas_w = 40 * (grid_w + panel_w)
+    canvas_h = 40 * grid_h
 
-      # display the game grid with the current tetromino
-      grid.display()
+    stddraw.setCanvasSize(canvas_w, canvas_h)
+    stddraw.setXscale(-0.5, grid_w + panel_w - 0.5)
+    stddraw.setYscale(-0.5, grid_h - 0.5)
+
+    
+    Tetromino.grid_height = grid_h
+    Tetromino.grid_width = grid_w
+>>>>>>>>> Temporary merge branch 2
+
+   
+    grid = GameGrid(grid_h, grid_w)
+
+
+    grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
+
+    current_tetromino = grid.next_tetromino
+    grid.current_tetromino = current_tetromino
+
+    grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
+
+    while True:
+        if stddraw.hasNextKeyTyped():
+            key = stddraw.nextKeyTyped()
+            if key in ("left", "right", "down"):
+                current_tetromino.move(key, grid)
+            elif key == "r":
+                current_tetromino.rotate_clockwise(grid)
+            stddraw.clearKeysTyped()
+
+        success = current_tetromino.move("down", grid)
+        if not success:
+            tiles, pos = current_tetromino.get_min_bounded_tile_matrix(True)
+            game_over, gained = grid.update_grid(tiles, pos)
+
+            if game_over:
+                break
+
+            grid.score += gained
+
+            current_tetromino = grid.next_tetromino
+            grid.current_tetromino = current_tetromino
+            grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
+
+        grid.display()
 
    # print a message on the console when the game is over
    print("Game over")
