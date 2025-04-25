@@ -37,7 +37,8 @@ def start():
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
    display_game_menu(grid_h, game_w)
-
+   #keeps the information if game paused 
+   is_paused = False 
    # the main game loop
    while True:
       # check for any user interaction via the keyboard
@@ -59,11 +60,17 @@ def start():
          # if the 'R' key is pressed
          elif key_typed == "r":
             current_tetromino.rotate_clockwise(grid)
+         elif key_typed == "p":
+            is_paused = not is_paused
+            display_game_menu(grid_h,grid_w)
          # clear the queue of the pressed keys for a smoother interaction
          stddraw.clearKeysTyped()
 
+     
+     
+      if not is_paused:
       # move the active tetromino down by one at each iteration (auto fall)
-      success = current_tetromino.move("down", grid)
+         success = current_tetromino.move("down", grid)
       # lock the active tetromino onto the grid when it cannot go down anymore
       if not success:
          # get the tile matrix of the tetromino without empty rows and columns
@@ -140,7 +147,52 @@ def display_game_menu(grid_height, grid_width):
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                break  # break the loop to end the method and start the game
+def display_pause_menu(grid_height, grid_width):
+   
 
+
+   # the colors used for the menu
+   background_color = Color(42, 69, 99)
+   button_color = Color(25, 255, 228)
+   text_color = Color(31, 160, 239)
+   # clear the background drawing canvas to background_color
+   stddraw.clear(background_color)
+   ## get the directory in which this python code file is #placed
+   #current_dir = os.path.dirname(os.path.realpath#(__file__))
+   ## compute the path of the image file
+   #img_file = current_dir + "/images/menu_image.png"
+   ## the coordinates to display the image centered #horizontally
+   img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+   ## the image is modeled by using the Picture class
+   #image_to_display = Picture(img_file)
+   ## add the image to the drawing canvas
+   #stddraw.picture(image_to_display, img_center_x, #img_center_y)
+   # the dimensions for the start game button
+   button_w, button_h = grid_width - 1.5, 2
+   # the coordinates of the bottom left corner for the start game button
+   button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+   # add the start game button as a filled rectangle
+   stddraw.setPenColor(button_color)
+   stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+   # add the text on the start game button
+   stddraw.setFontFamily("Arial")
+   stddraw.setFontSize(25)
+   stddraw.setPenColor(text_color)
+   text_to_display = "Resume"
+   stddraw.text(img_center_x, 5, text_to_display)
+   # the user interaction loop for the simple menu
+   while True:
+      # display the menu and wait for a short time (50 ms)
+      stddraw.show(50)
+      # check if the mouse has been left-clicked on the start game button
+      if stddraw.mousePressed():
+         # get the coordinates of the most recent location at which the mouse
+         # has been left-clicked
+         mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+         # check if these coordinates are inside the button
+         if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+            if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+               break  # break the loop to end the method and start the game   
 
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
