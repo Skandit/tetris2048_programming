@@ -1,6 +1,6 @@
 ################################################################################
 #                                                                              #
-# The main program of Tetris 2048 Base Code                                    #
+#            The main program of Tetris 2048 Base Code                         #
 #                                                                              #
 ################################################################################
 
@@ -37,24 +37,22 @@ def start():
    
     grid = GameGrid(grid_h, grid_w)
 
-
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
-
     current_tetromino = grid.next_tetromino
     grid.current_tetromino = current_tetromino
-
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
+    
     #holds the info if game is paused. 
     is_paused = False
     #show main starting screen.
-    display_game_menu(20,20)
+    display_game_menu(20, 20)
     #main loop 
     while True:
         if stddraw.hasNextKeyTyped():
             key = stddraw.nextKeyTyped()
             if key == "p":
                 is_paused = not is_paused
-            
+                display_pause_menu(20, 20)
             elif not is_paused:
                 if key in ("left", "right", "down"):
                     current_tetromino.move(key, grid)
@@ -63,9 +61,6 @@ def start():
                 
             stddraw.clearKeysTyped()
         
-
-        
-
         if not is_paused:
             success = current_tetromino.move("down", grid)
 
@@ -74,7 +69,8 @@ def start():
             game_over, gained = grid.update_grid(tiles, pos)
 
             if game_over:
-                break
+                print("Game Over")
+                display_restart_menu(20,20)
 
             grid.score += gained
 
@@ -84,7 +80,7 @@ def start():
 
         grid.display()
 
-    print("Game Over")
+    
 
 # A function for creating random shaped tetrominoes to enter the game grid
 def create_tetromino():
@@ -125,7 +121,7 @@ def display_game_menu(grid_height, grid_width):
    stddraw.setFontFamily("Arial")
    stddraw.setFontSize(25)
    stddraw.setPenColor(text_color)
-   text_to_display = "Click Here to Start the Game"
+   text_to_display = "Start the Game"
    stddraw.text(img_center_x, 5, text_to_display)
    # the user interaction loop for the simple menu
    while True:
@@ -140,8 +136,87 @@ def display_game_menu(grid_height, grid_width):
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                break  # break the loop to end the method and start the game
+def display_pause_menu(grid_height, grid_width):
+    background_color = Color( 64,  64,  64)
+    button_color = Color(25, 255, 228)
+    text_color = Color(31, 160, 239)
+    # clear the background drawing canvas to background_color
+    stddraw.clear(background_color)
+    # get the directory in which this python code file is placed
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    # compute the path of the image file
+    img_file = current_dir + "/images/menu_image.png"
+    # the coordinates to display the image centered horizontally
+    img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+    # the image is modeled by using the Picture class
+    image_to_display = Picture(img_file)
+    # add the image to the drawing canvas
+    stddraw.picture(image_to_display, img_center_x, img_center_y)
+
+    # the dimensions for the resume game button
+    button_w, button_h = grid_width - 1.5, 2
+    # the coordinates of the bottom left corner for the resume game button
+    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+    # add the resume game button as a filled rectangle
+    stddraw.setPenColor(button_color)
+    stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+    # add the text on the resume game button
+    stddraw.setFontFamily("Arial")
+    stddraw.setFontSize(25)
+    stddraw.setPenColor(text_color)
+    text_to_display = "Resume the Game"
+    stddraw.text(img_center_x, 5, text_to_display)
+    # the user interaction loop for the simple menu
 
 
+    while True:
+        stddraw.show(50)
+        if stddraw.mousePressed():
+            mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+            if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+                if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                    break  # break the loop to end the method and start the game
+
+def display_restart_menu(grid_height,grid_width):
+    background_color = Color( 64,  64,  64)
+    button_color = Color(25, 255, 228)
+    text_color = Color(31, 160, 239)
+    # clear the background drawing canvas to background_color
+    stddraw.clear(background_color)
+    # get the directory in which this python code file is placed
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    # compute the path of the image file
+    img_file = current_dir + "/images/menu_image.png"
+    # the coordinates to display the image centered horizontally
+    img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+    # the image is modeled by using the Picture class
+    image_to_display = Picture(img_file)
+    # add the image to the drawing canvas
+    stddraw.picture(image_to_display, img_center_x, img_center_y)
+
+    # the dimensions for the restart game button
+    button_w, button_h = grid_width - 1.5, 2
+    # the coordinates of the bottom left corner for the restart game button
+    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+    # add the restart game button as a filled rectangle
+    stddraw.setPenColor(button_color)
+    stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+
+    # add the text on the restart game button
+    stddraw.setFontFamily("Arial")
+    stddraw.setFontSize(25)
+    stddraw.setPenColor(text_color)
+    text_to_display = "Restart the Game"
+    stddraw.text(img_center_x, 5, text_to_display)
+
+    # the user interaction loop for the simple menu
+    while True:
+        stddraw.show(50)
+        if stddraw.mousePressed():
+            mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+            if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+                if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                    break  # break the loop to end the method and start the game
 
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
