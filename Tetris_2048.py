@@ -46,7 +46,9 @@ def start():
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
     #holds the info if game is paused. 
     is_paused = False
-
+    #show main starting screen.
+    display_game_menu(20,20)
+    #main loop 
     while True:
         if stddraw.hasNextKeyTyped():
             key = stddraw.nextKeyTyped()
@@ -97,7 +99,7 @@ def create_tetromino():
 # A function for displaying a simple menu before starting the game
 def display_game_menu(grid_height, grid_width):
    # the colors used for the menu
-   background_color = Color(42, 69, 99)
+   background_color = Color( 64,  64,  64)
    button_color = Color(25, 255, 228)
    text_color = Color(31, 160, 239)
    # clear the background drawing canvas to background_color
@@ -138,6 +140,9 @@ def display_game_menu(grid_height, grid_width):
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                break  # break the loop to end the method and start the game
+
+
+
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
 if __name__ == '__main__':
