@@ -25,6 +25,7 @@ class GameGrid:
       self.line_thickness = 0.002
       self.box_thickness = 10 * self.line_thickness
       self.score = 0
+      self.score_flash_timer = 0
       self.next_tetromino = None     # ekranın altındaki Next için
         # Menü butonunun koordinatları:
       self.menu_x, self.menu_y = grid_w + 1, grid_h - 5
@@ -43,6 +44,11 @@ class GameGrid:
         self.current_tetromino.draw()
     self.draw_boundaries()
     stddraw.show(250)
+    # Update score flash timer
+    if self.score_flash_timer > 0:
+        self.score_flash_timer -= 0.25  
+        if self.score_flash_timer < 0:
+            self.score_flash_timer = 0
 
    # A method for drawing the cells and the lines of the game grid
    def draw_grid(self):
@@ -123,7 +129,7 @@ class GameGrid:
    # (This method returns True when the game is over and False otherwise.)
    def update_grid(self, tiles_to_lock, blc_position):
     self.current_tetromino = None
-   
+    total_gain = 0
     n_rows, n_cols = len(tiles_to_lock), len(tiles_to_lock[0])
     for col in range(n_cols):
         for row in range(n_rows):
@@ -138,13 +144,15 @@ class GameGrid:
     if self.game_over:
         return True, 0
 
-    self.score = 0
-    
+    clear_gain = self.clear_full_rows()
+    total_gain += clear_gain
     while True:
         gain, merge_rows = self.merge_tiles_lowest()
         if gain == 0:
             break
-        self.score += gain
+        
+        total_gain += gain
+       
        
         self.settle_above_merges(merge_rows)
 
@@ -156,9 +164,9 @@ class GameGrid:
                 break
             self.down_free_tiles(free_tiles)
 
-        self.score += self.clear_full_rows()
+       
 
-    return self.game_over, self.score
+    return self.game_over, total_gain
 
    def does_tetromino_collide(self, tetromino):
     for i in range(len(tetromino.tile_matrix)):
@@ -318,7 +326,10 @@ class GameGrid:
 
    def draw_panel(self):
   
-    stddraw.setPenColor(Color(255, 255, 255))
+    if self.score_flash_timer > 0:
+        stddraw.setPenColor(Color(0, 255, 0))  
+    else:
+        stddraw.setPenColor(Color(255, 255, 255))
     stddraw.setFontSize(40)
     stddraw.text(self.panel_x + self.panel_w / 2, self.panel_h - 1, f"SCORE: {self.score}")
 

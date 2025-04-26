@@ -36,6 +36,7 @@ def start():
 
    
     grid = GameGrid(grid_h, grid_w)
+    grid.score = 0
 
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
     current_tetromino = grid.next_tetromino
@@ -69,10 +70,13 @@ def start():
             game_over, gained = grid.update_grid(tiles, pos)
 
             if game_over:
+
                 print("Game Over")
                 display_restart_menu(20,20)
-
-            grid.score += gained
+            else:
+                grid.score += gained
+                if gained > 0:
+                    grid.score_flash_timer = 0.5
 
             current_tetromino = grid.next_tetromino
             grid.current_tetromino = current_tetromino
