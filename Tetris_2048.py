@@ -35,8 +35,8 @@ def start():
     grid_h = 20
     grid_w = 12
     panel_w = 8
-    canvas_w = 30 * (grid_w + panel_w)
-    canvas_h = 30 * grid_h
+    canvas_w = 40 * (grid_w + panel_w)
+    canvas_h = 40 * grid_h
 
     if not canvas_initialized:
         stddraw.setCanvasSize(canvas_w, canvas_h)
