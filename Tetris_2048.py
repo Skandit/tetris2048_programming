@@ -12,6 +12,10 @@ from game_grid import GameGrid  # the class for modeling the game grid
 from tetromino import Tetromino  # the class for modeling the tetrominoes
 import random  # used for creating tetrominoes with random types (shapes)
 import time
+
+# track whether the drawing canvas has been set up
+canvas_initialized = False
+
 #colors ........................................
 BG     = Color(0x00,0x22,0x4D)
 GRID   = Color(0x5D,0x0E,0x41)
@@ -25,6 +29,9 @@ def start():
     from game_grid import GameGrid
     import lib.stddraw as stddraw
 
+    global canvas_initialized
+
+
     move_interval = 0.1  # saniye cinsinden: her 0.1 saniyede bir sağ/sol kaydır
     last_move_time = time.time()
 
@@ -35,10 +42,11 @@ def start():
     canvas_w = 40 * (grid_w + panel_w)
     canvas_h = 40 * grid_h
 
-    stddraw.setCanvasSize(canvas_w, canvas_h)
-    stddraw.setXscale(-0.5, grid_w + panel_w - 0.5)
-    stddraw.setYscale(-0.5, grid_h - 0.5)
-
+    if not canvas_initialized:
+        stddraw.setCanvasSize(canvas_w, canvas_h)
+        stddraw.setXscale(-0.5, grid_w + panel_w - 0.5)
+        stddraw.setYscale(-0.5, grid_h - 0.5)
+        canvas_initialized = True
    
     Tetromino.grid_height = grid_h
     Tetromino.grid_width = grid_w
@@ -114,7 +122,10 @@ def start():
             if game_over:
 
                 print("Game Over")
-                display_restart_menu(grid_h, grid_w)
+                for a in range(0, 20):
+                    for b in range(12):
+                        grid.tile_matrix[a][b] = None
+                display_restart_menu(20, 20)
                 return
             else:
                 grid.score += gained
@@ -259,6 +270,7 @@ def display_restart_menu(grid_height,grid_width):
 
     # the user interaction loop for the simple menu
     while True:
+        
         stddraw.show(50)
         if stddraw.mousePressed():
             mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
@@ -269,4 +281,6 @@ def display_restart_menu(grid_height,grid_width):
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
 if __name__ == '__main__':
-   start()
+   # keep the window open and allow restarting
+   while True:
+       start()
