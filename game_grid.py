@@ -346,7 +346,7 @@ class GameGrid:
     stddraw.filledRectangle(mx, my, mw, mh)
     stddraw.setPenColor(Color(255, 255, 255))
     stddraw.setFontSize(24)
-    stddraw.text(mx + mw / 2, my + mh / 2, "MENU")
+    stddraw.text(mx + mw / 2, my + mh / 2, "PAUSE")
 
    
     stddraw.setPenColor(Color(255, 255, 255))
@@ -368,3 +368,10 @@ class GameGrid:
                     offset_x = center_x - cols / 2
                     pos = Point(offset_x + c, base_y + (rows - 1 - r))
                     tile.draw(pos)
+
+   def has_won(self):
+        for row in self.tile_matrix:
+            for tile in row:
+                if tile is not None and tile.number == 2048:
+                    return True
+        return False

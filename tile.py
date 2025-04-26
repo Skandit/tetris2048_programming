@@ -29,7 +29,7 @@ class Tile:
    # A constructor that creates a tile with 2 as the number on it
    def __init__(self, position = Point(0, 0)):
       # set the number on this tile
-      numbers = [2,4,8]
+      numbers = [2,4]
       self.number = int(np.random.choice(numbers,1))
       # set the colors of this tile
       self.background_color = Color(151, 178, 199)  # background (tile) color

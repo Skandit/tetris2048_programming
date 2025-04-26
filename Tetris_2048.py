@@ -24,10 +24,6 @@ MERGE  = Color(0xA0,0x15,0x3E)
 # The main function where this program starts execution
 def start():
 
-    import random
-    from tetromino import Tetromino
-    from game_grid import GameGrid
-    import lib.stddraw as stddraw
 
     global canvas_initialized
 
@@ -39,8 +35,8 @@ def start():
     grid_h = 20
     grid_w = 12
     panel_w = 8
-    canvas_w = 40 * (grid_w + panel_w)
-    canvas_h = 40 * grid_h
+    canvas_w = 30 * (grid_w + panel_w)
+    canvas_h = 30 * grid_h
 
     if not canvas_initialized:
         stddraw.setCanvasSize(canvas_w, canvas_h)
@@ -125,7 +121,10 @@ def start():
                 for a in range(0, 20):
                     for b in range(12):
                         grid.tile_matrix[a][b] = None
-                display_restart_menu(20, 20)
+                display_restart_menu(grid_h, grid_w + panel_w )
+                return
+            if grid.has_won():
+                display_win_menu(grid_h, grid_w + panel_w,)
                 return
             else:
                 grid.score += gained
@@ -252,6 +251,58 @@ def display_restart_menu(grid_height,grid_width):
     image_to_display = Picture(img_file)
     # add the image to the drawing canvas
     stddraw.picture(image_to_display, img_center_x, img_center_y)
+
+    stddraw.setFontFamily("Arial")
+    stddraw.setFontSize(32)
+    stddraw.setPenColor(text_color)
+    stddraw.text(img_center_x, 8, "GAME OVER")
+
+    # the dimensions for the restart game button
+    button_w, button_h = grid_width - 1.5, 2
+    # the coordinates of the bottom left corner for the restart game button
+    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+    # add the restart game button as a filled rectangle
+    stddraw.setPenColor(button_color)
+    stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+
+    # add the text on the restart game button
+    stddraw.setFontFamily("Arial")
+    stddraw.setFontSize(25)
+    stddraw.setPenColor(text_color)
+    text_to_display = "Restart the Game"
+    stddraw.text(img_center_x, 5, text_to_display)
+
+    # the user interaction loop for the simple menu
+    while True:
+        
+        stddraw.show(50)
+        if stddraw.mousePressed():
+            mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+            if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+                if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                    break  # break the loop to end the method and start the game
+
+def display_win_menu(grid_height,grid_width):
+    background_color = Color( 64,  64,  64)
+    button_color = Color(25, 255, 228)
+    text_color = Color(31, 160, 239)
+    # clear the background drawing canvas to background_color
+    stddraw.clear(BG)
+    # get the directory in which this python code file is placed
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    # compute the path of the image file
+    img_file = current_dir + "/images/menu_image.png"
+    # the coordinates to display the image centered horizontally
+    img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+    # the image is modeled by using the Picture class
+    image_to_display = Picture(img_file)
+    # add the image to the drawing canvas
+    stddraw.picture(image_to_display, img_center_x, img_center_y)
+
+    stddraw.setFontFamily("Arial")
+    stddraw.setFontSize(32)
+    stddraw.setPenColor(text_color)
+    stddraw.text(img_center_x, 8, "YOU WON")
 
     # the dimensions for the restart game button
     button_w, button_h = grid_width - 1.5, 2
