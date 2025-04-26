@@ -31,6 +31,7 @@ def start():
     move_interval = 0.1  # saniye cinsinden: her 0.1 saniyede bir sağ/sol kaydır
     last_move_time = time.time()
 
+    stddraw.clearKeysTyped()#clear the keys typed
 
     grid_h = 20
     grid_w = 12
@@ -72,7 +73,7 @@ def start():
     is_paused = False
     #show main starting screen.
     display_game_menu(20, 20)
-    drop_interval_down_key = 0.05  # down tuşuna basarken satır atlama süresi
+    drop_interval_down_key = 0.05  
     is_down_pressed = False 
     #main loop 
     while True:
