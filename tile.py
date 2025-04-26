@@ -2,6 +2,21 @@ import lib.stddraw as stddraw  # used for drawing the tiles to display them
 from lib.color import Color  # used for coloring the tiles
 from point import Point
 import numpy as np
+from lib.color import Color  # used for coloring the tiles
+
+COLOR_PALETTE = {
+     2:    Color(243, 255, 144),  
+    4:    Color(220, 245, 120),  
+    8:    Color(190, 235, 80),  
+    16:   Color(155, 236, 0),   
+    32:   Color(100, 200, 0),   
+    64:   Color(60, 180, 0),    
+    128:  Color(30, 150, 10),  
+    256:  Color(20, 120, 15),   
+    512:  Color(10, 90, 20),    
+    1024: Color(5, 70, 15),      
+    2048: Color(0, 50, 10),  
+}
 # A class for modeling numbered tiles as in 2048
 class Tile:
    # Class variables shared among all Tile objects
@@ -14,7 +29,7 @@ class Tile:
    # A constructor that creates a tile with 2 as the number on it
    def __init__(self, position = Point(0, 0)):
       # set the number on this tile
-      numbers = [2, 4]
+      numbers = [2,4,8]
       self.number = int(np.random.choice(numbers,1))
       # set the colors of this tile
       self.background_color = Color(151, 178, 199)  # background (tile) color
@@ -22,20 +37,17 @@ class Tile:
       self.box_color = Color(0, 100, 200)  # box (boundary) color
       self.position = Point(position.x, position.y)
    # A method for drawing this tile at a given position with a given length
-   def draw(self, position, length=1):  # length defaults to 1
-      # draw the tile as a filled square
-      stddraw.setPenColor(self.background_color)
-      stddraw.filledSquare(position.x, position.y, length / 2)
-      # draw the bounding box around the tile as a square
-      stddraw.setPenColor(self.box_color)
-      stddraw.setPenRadius(Tile.boundary_thickness)
-      stddraw.square(position.x, position.y, length / 2)
-      stddraw.setPenRadius()  # reset the pen radius to its default value
-      # draw the number on the tile
-      stddraw.setPenColor(self.foreground_color)
-      stddraw.setFontFamily(Tile.font_family)
-      stddraw.setFontSize(Tile.font_size)
-      stddraw.text(position.x, position.y, str(self.number))
+   def draw(self, pos):
+    # Number'a göre renk seç
+    color = COLOR_PALETTE.get(self.number, Color(255, 255, 255))  # Bulamazsa beyaz yapar
+
+    stddraw.setPenColor(color)
+    stddraw.filledSquare(pos.x, pos.y, 0.5)  # Blok çizimi
+
+    # Sayı yaz
+    stddraw.setPenColor(Color(0, 0, 0))  # Siyah yazı
+    stddraw.setFontSize(18)
+    stddraw.text(pos.x, pos.y, str(self.number))
 
    def move(self, dx, dy):
       self.position.translate(dx, dy)

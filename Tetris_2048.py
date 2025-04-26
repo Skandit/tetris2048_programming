@@ -12,6 +12,11 @@ from game_grid import GameGrid  # the class for modeling the game grid
 from tetromino import Tetromino  # the class for modeling the tetrominoes
 import random  # used for creating tetrominoes with random types (shapes)
 import time
+#colors ........................................
+BG     = Color(0x00,0x22,0x4D)
+GRID   = Color(0x5D,0x0E,0x41)
+BLOCK  = Color(0xFF,0x20,0x4E)
+MERGE  = Color(0xA0,0x15,0x3E)
 # The main function where this program starts execution
 def start():
 
@@ -124,7 +129,7 @@ def display_game_menu(grid_height, grid_width):
    button_color = Color(25, 255, 228)
    text_color = Color(31, 160, 239)
    # clear the background drawing canvas to background_color
-   stddraw.clear(background_color)
+   stddraw.clear(BG)
    # get the directory in which this python code file is placed
    current_dir = os.path.dirname(os.path.realpath(__file__))
    # compute the path of the image file
@@ -207,7 +212,7 @@ def display_restart_menu(grid_height,grid_width):
     button_color = Color(25, 255, 228)
     text_color = Color(31, 160, 239)
     # clear the background drawing canvas to background_color
-    stddraw.clear(background_color)
+    stddraw.clear(BG)
     # get the directory in which this python code file is placed
     current_dir = os.path.dirname(os.path.realpath(__file__))
     # compute the path of the image file

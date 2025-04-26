@@ -3,6 +3,11 @@ from lib.color import Color  # used for coloring the game grid
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
 import copy
+#colors ........................................
+BG     = Color(0x00,0x22,0x4D)
+GRID   = Color(0x5D,0x0E,0x41)
+BLOCK  = Color(0xFF,0x20,0x4E)
+MERGE  = Color(0xA0,0x15,0x3E)
 # A class for modeling the game grid
 class GameGrid:
    # A constructor for creating the game grid based on the given arguments
@@ -17,10 +22,10 @@ class GameGrid:
       # the game_over flag shows whether the game is over or not
       self.game_over = False
       # set the color used for the empty grid cells
-      self.empty_cell_color = Color(42, 69, 99)
+      self.empty_cell_color = BG
       # set the colors used for the grid lines and the grid boundaries
-      self.line_color = Color(0, 100, 200)
-      self.boundary_color = Color(0, 100, 200)
+      self.line_color = GRID
+      self.boundary_color = GRID
       # thickness values used for the grid lines and the grid boundaries
       self.line_thickness = 0.002
       self.box_thickness = 10 * self.line_thickness
