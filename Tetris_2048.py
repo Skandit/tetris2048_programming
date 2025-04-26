@@ -125,11 +125,12 @@ def create_tetromino():
 # A function for displaying a simple menu before starting the game
 def display_game_menu(grid_height, grid_width):
    # the colors used for the menu
-   background_color = Color( 64,  64,  64)
-   button_color = Color(25, 255, 228)
-   text_color = Color(31, 160, 239)
+   background_color = Color(53,55,75)    
+   button_color = Color(255, 32, 78)        
+   text_color = Color(255, 255, 255)       
+
    # clear the background drawing canvas to background_color
-   stddraw.clear(BG)
+   stddraw.clear(background_color)
    # get the directory in which this python code file is placed
    current_dir = os.path.dirname(os.path.realpath(__file__))
    # compute the path of the image file

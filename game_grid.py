@@ -4,8 +4,8 @@ from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
 import copy
 #colors ........................................
-BG     = Color(0x00,0x22,0x4D)
-GRID   = Color(0x5D,0x0E,0x41)
+BG     = Color(53,55,75)
+GRID   = Color(45,149,150)
 BLOCK  = Color(0xFF,0x20,0x4E)
 MERGE  = Color(0xA0,0x15,0x3E)
 # A class for modeling the game grid

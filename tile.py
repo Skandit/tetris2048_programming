@@ -5,17 +5,17 @@ import numpy as np
 from lib.color import Color  # used for coloring the tiles
 
 COLOR_PALETTE = {
-     2:    Color(243, 255, 144),  
+    2:    Color(243, 255, 144),  
     4:    Color(220, 245, 120),  
     8:    Color(190, 235, 80),  
     16:   Color(155, 236, 0),   
     32:   Color(100, 200, 0),   
     64:   Color(60, 180, 0),    
-    128:  Color(30, 150, 10),  
-    256:  Color(20, 120, 15),   
-    512:  Color(10, 90, 20),    
-    1024: Color(5, 70, 15),      
-    2048: Color(0, 50, 10),  
+    128: Color(223, 151, 85),  
+    256: Color(250, 213, 154),  # FAD59A
+    512: Color(233, 163, 25),   # E9A319
+    1024: Color(223, 151, 85),  # DF9755
+    2048: Color(255,143,135),  # A86523
 }
 # A class for modeling numbered tiles as in 2048
 class Tile:
@@ -29,7 +29,7 @@ class Tile:
    # A constructor that creates a tile with 2 as the number on it
    def __init__(self, position = Point(0, 0)):
       # set the number on this tile
-      numbers = [2,4,8]
+      numbers = [2,4,8,16,32,64,128,256,512,1024,2048]
       self.number = int(np.random.choice(numbers,1))
       # set the colors of this tile
       self.background_color = Color(151, 178, 199)  # background (tile) color
