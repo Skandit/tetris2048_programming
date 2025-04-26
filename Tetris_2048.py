@@ -12,25 +12,23 @@ from game_grid import GameGrid  # the class for modeling the game grid
 from tetromino import Tetromino  # the class for modeling the tetrominoes
 import random  # used for creating tetrominoes with random types (shapes)
 import time
-
-# track whether the drawing canvas has been set up
-canvas_initialized = False
-
 #colors ........................................
 BG     = Color(0x00,0x22,0x4D)
 GRID   = Color(0x5D,0x0E,0x41)
 BLOCK  = Color(0xFF,0x20,0x4E)
 MERGE  = Color(0xA0,0x15,0x3E)
 # The main function where this program starts execution
+is_paused = False  # global variable to hold the pause state of the game
 def start():
 
-
-    global canvas_initialized
-
+    import random
+    from tetromino import Tetromino
+    from game_grid import GameGrid
+    import lib.stddraw as stddraw
 
     move_interval = 0.1  # saniye cinsinden: her 0.1 saniyede bir sağ/sol kaydır
     last_move_time = time.time()
-
+    global is_paused
 
     grid_h = 20
     grid_w = 12
@@ -38,11 +36,10 @@ def start():
     canvas_w = 40 * (grid_w + panel_w)
     canvas_h = 40 * grid_h
 
-    if not canvas_initialized:
-        stddraw.setCanvasSize(canvas_w, canvas_h)
-        stddraw.setXscale(-0.5, grid_w + panel_w - 0.5)
-        stddraw.setYscale(-0.5, grid_h - 0.5)
-        canvas_initialized = True
+    stddraw.setCanvasSize(canvas_w, canvas_h)
+    stddraw.setXscale(-0.5, grid_w + panel_w - 0.5)
+    stddraw.setYscale(-0.5, grid_h - 0.5)
+
    
     Tetromino.grid_height = grid_h
     Tetromino.grid_width = grid_w
@@ -50,13 +47,6 @@ def start():
    
     grid = GameGrid(grid_h, grid_w)
     grid.score = 0
-
-
-    menuxcords = grid.menu_x
-    menuycords = grid.menu_y
-    menuhcords = grid.menu_h
-    menuwcords = grid.menu_w
-
 
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
     current_tetromino = grid.next_tetromino
@@ -69,30 +59,23 @@ def start():
 
 
     #holds the info if game is paused. 
-    is_paused = False
+    
     #show main starting screen.
     display_game_menu(20, 20)
     drop_interval_down_key = 0.05  # down tuşuna basarken satır atlama süresi
     is_down_pressed = False 
     #main loop 
     while True:
-        #checks if user paused the game by button
-        if stddraw.mousePressed():
-                mx, my = stddraw.mouseX(), stddraw.mouseY()
-                if(menuxcords <= mx <= menuxcords + menuwcords and
-        menuycords <= my <= menuycords + menuhcords):
-                        is_paused = True
-                        print("Stopped")
-                        display_pause_menu(20,20)
-                        is_paused = False
-
+        
         if stddraw.hasNextKeyTyped():
             
             key = stddraw.nextKeyTyped()
             if key == "p":
                 is_paused = not is_paused
-                display_pause_menu(20, 20)
-                is_paused = False
+                if is_paused:
+                    display_pause_menu(20, 20)
+                    is_paused = False  
+
             elif not is_paused and key in ("left", "right", "down", "r"):
                 if key in ("left", "right"):
                     current_tetromino.move(key, grid)
@@ -118,13 +101,7 @@ def start():
             if game_over:
 
                 print("Game Over")
-                for a in range(0, 20):
-                    for b in range(12):
-                        grid.tile_matrix[a][b] = None
-                display_restart_menu(grid_h, grid_w + panel_w )
-                return
-            if grid.has_won():
-                display_win_menu(grid_h, grid_w + panel_w,)
+                display_restart_menu(grid_h, grid_w)
                 return
             else:
                 grid.score += gained
@@ -194,8 +171,9 @@ def display_game_menu(grid_height, grid_width):
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                break  # break the loop to end the method and start the game
-def display_pause_menu(grid_height, grid_width):
-    background_color = Color( 64,  64,  64)
+def display_pause_menu(grid_height, grid_width): 
+    global is_paused
+    background_color = Color( 53,  55,  75)
     button_color = Color(25, 255, 228)
     text_color = Color(31, 160, 239)
     # clear the background drawing canvas to background_color
@@ -230,6 +208,7 @@ def display_pause_menu(grid_height, grid_width):
     while True:
         stddraw.show(50)
         if stddraw.mousePressed():
+            
             mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
             if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
                 if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
@@ -252,11 +231,6 @@ def display_restart_menu(grid_height,grid_width):
     # add the image to the drawing canvas
     stddraw.picture(image_to_display, img_center_x, img_center_y)
 
-    stddraw.setFontFamily("Arial")
-    stddraw.setFontSize(32)
-    stddraw.setPenColor(text_color)
-    stddraw.text(img_center_x, 8, "GAME OVER")
-
     # the dimensions for the restart game button
     button_w, button_h = grid_width - 1.5, 2
     # the coordinates of the bottom left corner for the restart game button
@@ -274,54 +248,6 @@ def display_restart_menu(grid_height,grid_width):
 
     # the user interaction loop for the simple menu
     while True:
-        
-        stddraw.show(50)
-        if stddraw.mousePressed():
-            mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
-            if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
-                if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
-                    break  # break the loop to end the method and start the game
-
-def display_win_menu(grid_height,grid_width):
-    background_color = Color( 64,  64,  64)
-    button_color = Color(25, 255, 228)
-    text_color = Color(31, 160, 239)
-    # clear the background drawing canvas to background_color
-    stddraw.clear(BG)
-    # get the directory in which this python code file is placed
-    current_dir = os.path.dirname(os.path.realpath(__file__))
-    # compute the path of the image file
-    img_file = current_dir + "/images/menu_image.png"
-    # the coordinates to display the image centered horizontally
-    img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
-    # the image is modeled by using the Picture class
-    image_to_display = Picture(img_file)
-    # add the image to the drawing canvas
-    stddraw.picture(image_to_display, img_center_x, img_center_y)
-
-    stddraw.setFontFamily("Arial")
-    stddraw.setFontSize(32)
-    stddraw.setPenColor(text_color)
-    stddraw.text(img_center_x, 8, "YOU WON")
-
-    # the dimensions for the restart game button
-    button_w, button_h = grid_width - 1.5, 2
-    # the coordinates of the bottom left corner for the restart game button
-    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
-    # add the restart game button as a filled rectangle
-    stddraw.setPenColor(button_color)
-    stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
-
-    # add the text on the restart game button
-    stddraw.setFontFamily("Arial")
-    stddraw.setFontSize(25)
-    stddraw.setPenColor(text_color)
-    text_to_display = "Restart the Game"
-    stddraw.text(img_center_x, 5, text_to_display)
-
-    # the user interaction loop for the simple menu
-    while True:
-        
         stddraw.show(50)
         if stddraw.mousePressed():
             mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
@@ -332,6 +258,4 @@ def display_win_menu(grid_height,grid_width):
 # start() function is specified as the entry point (main function) from which
 # the program starts execution
 if __name__ == '__main__':
-   # keep the window open and allow restarting
-   while True:
-       start()
+   start()
