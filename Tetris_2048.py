@@ -47,6 +47,13 @@ def start():
     grid = GameGrid(grid_h, grid_w)
     grid.score = 0
 
+
+    menuxcords = grid.menu_x
+    menuycords = grid.menu_y
+    menuhcords = grid.menu_h
+    menuwcords = grid.menu_w
+
+
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
     current_tetromino = grid.next_tetromino
     grid.current_tetromino = current_tetromino
@@ -65,13 +72,23 @@ def start():
     is_down_pressed = False 
     #main loop 
     while True:
-        
+        #checks if user paused the game by button
+        if stddraw.mousePressed():
+                mx, my = stddraw.mouseX(), stddraw.mouseY()
+                if(menuxcords <= mx <= menuxcords + menuwcords and
+        menuycords <= my <= menuycords + menuhcords):
+                        is_paused = True
+                        print("Stopped")
+                        display_pause_menu(20,20)
+                        is_paused = False
+
         if stddraw.hasNextKeyTyped():
             
             key = stddraw.nextKeyTyped()
             if key == "p":
                 is_paused = not is_paused
                 display_pause_menu(20, 20)
+                is_paused = False
             elif not is_paused and key in ("left", "right", "down", "r"):
                 if key in ("left", "right"):
                     current_tetromino.move(key, grid)
