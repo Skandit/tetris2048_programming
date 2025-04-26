@@ -56,6 +56,8 @@ def start():
     is_paused = False
     #show main starting screen.
     display_game_menu(20, 20)
+    drop_interval_down_key = 0.05  # down tuşuna basarken satır atlama süresi
+    is_down_pressed = False 
     #main loop 
     while True:
         
