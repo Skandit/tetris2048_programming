@@ -11,13 +11,17 @@ import os  # the os module is used for file and directory operations
 from game_grid import GameGrid  # the class for modeling the game grid
 from tetromino import Tetromino  # the class for modeling the tetrominoes
 import random  # used for creating tetrominoes with random types (shapes)
-
+import time
 # The main function where this program starts execution
 def start():
+
     import random
     from tetromino import Tetromino
     from game_grid import GameGrid
     import lib.stddraw as stddraw
+
+    move_interval = 0.1  # saniye cinsinden: her 0.1 saniyede bir sağ/sol kaydır
+    last_move_time = time.time()
 
 
     grid_h = 20
@@ -43,28 +47,42 @@ def start():
     grid.current_tetromino = current_tetromino
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
     
+    #to do more smooth drop
+    drop_interval = 0.5  # seconds per row
+    last_drop_time = time.time()
+
+
     #holds the info if game is paused. 
     is_paused = False
     #show main starting screen.
     display_game_menu(20, 20)
     #main loop 
     while True:
+        
         if stddraw.hasNextKeyTyped():
+            
             key = stddraw.nextKeyTyped()
             if key == "p":
                 is_paused = not is_paused
                 display_pause_menu(20, 20)
-            elif not is_paused:
-                if key in ("left", "right", "down"):
+            elif not is_paused and key in ("left", "right", "down", "r"):
+                if key in ("left", "right"):
                     current_tetromino.move(key, grid)
+                elif key == "down":
+                    while current_tetromino.move("down", grid):
+                        pass
+
                 elif key == "r":
                     current_tetromino.rotate_clockwise(grid)
                 
             stddraw.clearKeysTyped()
         
         if not is_paused:
+            now = time.time()
+            if now - last_drop_time >= drop_interval:
+                last_drop_time = now
             success = current_tetromino.move("down", grid)
-
+            last_drop_time = now
         if not success:
             tiles, pos = current_tetromino.get_min_bounded_tile_matrix(True)
             game_over, gained = grid.update_grid(tiles, pos)
@@ -72,7 +90,8 @@ def start():
             if game_over:
 
                 print("Game Over")
-                display_restart_menu(20,20)
+                display_restart_menu(grid_h, grid_w)
+                return
             else:
                 grid.score += gained
                 if gained > 0:
@@ -84,7 +103,7 @@ def start():
 
         grid.display()
 
-    
+
 
 # A function for creating random shaped tetrominoes to enter the game grid
 def create_tetromino():
