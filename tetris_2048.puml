@@ -1,0 +1,40 @@
+
+"""
+# UML Diagrams (PlantUML)
+
+@startuml ClassDiagram
+class Tetris_2048 {
+    + start()
+    + create_tetromino()
+    + display_game_menu(grid_height, grid_width)
+    + display_pause_menu(grid_height, grid_width)
+    + display_restart_menu(grid_height, grid_width, score)
+    + display_win_menu(grid_height, grid_width, score)
+}
+@enduml
+
+@startuml SequenceDiagram
+actor Player
+participant Main as "Tetris_2048.py"
+participant Menu as "display_game_menu()"
+participant Pause as "display_pause_menu()"
+participant Restart as "display_restart_menu()"
+participant Win as "display_win_menu()"
+
+Player -> Main: start()
+Main -> Menu: display_game_menu()
+Main -> Main: main game loop (input & drop)
+alt pause triggered
+    Main -> Pause: display_pause_menu()
+    Pause --> Main: returns 'resume' or 'restart'
+end
+alt game over
+    Main -> Restart: display_restart_menu()
+    Restart --> Main: loop restart
+end
+alt win condition
+    Main -> Win: display_win_menu()
+    Win --> Main: loop restart
+end
+@enduml
+"""

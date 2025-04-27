@@ -142,59 +142,59 @@ def start():
 
 # A function for creating random shaped tetrominoes to enter the game grid
 def create_tetromino():
-   # the type (shape) of the tetromino is determined randomly
-   tetromino_types = ['I', 'O', 'Z', 'S', 'L', 'J', 'T']
-   random_index = random.randint(0, len(tetromino_types) - 1)
-   random_type = tetromino_types[random_index]
-   # create and return the tetromino
-   tetromino = Tetromino(random_type)
-   return tetromino
+    # the type (shape) of the tetromino is determined randomly
+    tetromino_types = ['I', 'O', 'Z', 'S', 'L', 'J', 'T']
+    random_index = random.randint(0, len(tetromino_types) - 1)
+    random_type = tetromino_types[random_index]
+    # create and return the tetromino
+    tetromino = Tetromino(random_type)
+    return tetromino
 
 # A function for displaying a simple menu before starting the game
 def display_game_menu(grid_height, grid_width):
-   # the colors used for the menu
-   background_color = Color(53,55,75)    
-   button_color = Color(255, 32, 78)        
-   text_color = Color(255, 255, 255)       
-
-   # clear the background drawing canvas to background_color
-   stddraw.clear(background_color)
-   # get the directory in which this python code file is placed
-   current_dir = os.path.dirname(os.path.realpath(__file__))
-   # compute the path of the image file
-   img_file = current_dir + "/images/menu_image.png"
-   # the coordinates to display the image centered horizontally
-   img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
-   # the image is modeled by using the Picture class
-   image_to_display = Picture(img_file)
-   # add the image to the drawing canvas
-   stddraw.picture(image_to_display, img_center_x, img_center_y)
-   # the dimensions for the start game button
-   button_w, button_h = grid_width - 1.5, 2
-   # the coordinates of the bottom left corner for the start game button
-   button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
-   # add the start game button as a filled rectangle
-   stddraw.setPenColor(button_color)
-   stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
-   # add the text on the start game button
-   stddraw.setFontFamily("Arial")
-   stddraw.setFontSize(25)
-   stddraw.setPenColor(text_color)
-   text_to_display = "Start the Game"
-   stddraw.text(img_center_x, 5, text_to_display)
-   # the user interaction loop for the simple menu
-   while True:
-      # display the menu and wait for a short time (50 ms)
-      stddraw.show(50)
-      # check if the mouse has been left-clicked on the start game button
-      if stddraw.mousePressed():
-         # get the coordinates of the most recent location at which the mouse
-         # has been left-clicked
-         mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
-         # check if these coordinates are inside the button
-         if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
-            if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
-               break  # break the loop to end the method and start the game
+    # the colors used for the menu
+    background_color = Color(53,55,75)    
+    button_color = Color(255, 32, 78)        
+    text_color = Color(255, 255, 255)       
+ 
+    # clear the background drawing canvas to background_color
+    stddraw.clear(background_color)
+    # get the directory in which this python code file is placed
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    # compute the path of the image file
+    img_file = current_dir + "/images/menu_image.png"
+    # the coordinates to display the image centered horizontally
+    img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+    # the image is modeled by using the Picture class
+    image_to_display = Picture(img_file)
+    # add the image to the drawing canvas
+    stddraw.picture(image_to_display, img_center_x, img_center_y)
+    # the dimensions for the start game button
+    button_w, button_h = grid_width - 1.5, 2
+    # the coordinates of the bottom left corner for the start game button
+    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+    # add the start game button as a filled rectangle
+    stddraw.setPenColor(button_color)
+    stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+    # add the text on the start game button
+    stddraw.setFontFamily("Arial")
+    stddraw.setFontSize(25)
+    stddraw.setPenColor(text_color)
+    text_to_display = "Start the Game"
+    stddraw.text(img_center_x, 5, text_to_display)
+    # the user interaction loop for the simple menu
+    while True:
+        # display the menu and wait for a short time (50 ms)
+        stddraw.show(50)
+        # check if the mouse has been left-clicked on the start game button
+        if stddraw.mousePressed():
+            # get the coordinates of the most recent location at which the mouse
+            # has been left-clicked
+            mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+            # check if these coordinates are inside the button
+            if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+                if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                   break  # break the loop to end the method and start the game
 def display_pause_menu(grid_height, grid_width):
     background_color = Color( 64,  64,  64)
     button_color = Color(25, 255, 228)
@@ -358,5 +358,5 @@ def display_win_menu(grid_height,grid_width,score):
 # the program starts execution
 if __name__ == '__main__':
    # keep the window open and allow restarting
-   while True:
-       start()
+    while True:
+        start()
