@@ -215,25 +215,44 @@ def display_pause_menu(grid_height, grid_width):
     # the dimensions for the resume game button
     button_w, button_h = grid_width - 1.5, 2
     # the coordinates of the bottom left corner for the resume game button
-    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+    button_resume_x, button_resume_y = img_center_x - button_w / 2, 4
     # add the resume game button as a filled rectangle
     stddraw.setPenColor(button_color)
-    stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+    stddraw.filledRectangle(button_resume_x, button_resume_y, button_w, button_h)
     # add the text on the resume game button
     stddraw.setFontFamily("Arial")
     stddraw.setFontSize(25)
     stddraw.setPenColor(text_color)
     text_to_display = "Resume the Game"
     stddraw.text(img_center_x, 5, text_to_display)
-    # the user interaction loop for the simple menu
+    
+    # the dimensions for the restart game button
+    button_w, button_h = grid_width - 1.5, 2
+    # the coordinates of the bottom left corner for the restart game button
+    button_restart_x, button_restart_y = img_center_x - button_w / 2, 1
+    # add the restart game button as a filled rectangle
+    stddraw.setPenColor(button_color)
+    stddraw.filledRectangle(button_restart_x, button_restart_y, button_w, button_h)
+    
+    # add the text on the restart game button
+    stddraw.setFontFamily("Arial")
+    stddraw.setFontSize(25)
+    stddraw.setPenColor(text_color)
+    text_to_display = "Restart the Game"
+    stddraw.text(img_center_x, 2, text_to_display)
 
+    # the user interaction loop for the simple menu
+    
 
     while True:
         stddraw.show(50)
         if stddraw.mousePressed():
             mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
-            if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
-                if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+            if mouse_x >= button_resume_x and mouse_x <= button_resume_x + button_w:
+                if mouse_y >= button_resume_y and mouse_y <= button_resume_y + button_h:
+                    break  # break the loop to end the method and start the game
+            if mouse_x >= button_restart_x and mouse_x <= button_restart_x + button_w:
+                if mouse_y >= button_restart_y and mouse_y <= button_restart_y + button_h:
                     break  # break the loop to end the method and start the game
 
 def display_restart_menu(grid_height,grid_width):
