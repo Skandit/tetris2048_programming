@@ -37,8 +37,11 @@ class GameGrid:
       self.menu_w, self.menu_h = 6, 3
       self.panel_w = 8
       self.panel_x = grid_w
-      self.panel_h = grid_h
-
+      self.panel_h = grid_h + 1
+      self.menu_w = 6
+      self.menu_h = 3
+      self.menu_x = self.panel_x + (self.panel_w - self.menu_w) / 2
+      self.menu_y = self.panel_h - 6.5
 
    # A method for displaying the game grid
    def display(self):
