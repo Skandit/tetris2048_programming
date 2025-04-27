@@ -339,7 +339,7 @@ class GameGrid:
     else:
         stddraw.setPenColor(Color(255, 255, 255))
     stddraw.setFontSize(40)
-    stddraw.text(self.panel_x + self.panel_w / 2, self.panel_h - 1, f"SCORE: {self.score}")
+    stddraw.text(self.panel_x + self.panel_w / 2, self.panel_h - 2, f"SCORE: {self.score}")
 
 
     mw, mh = 6, 3
