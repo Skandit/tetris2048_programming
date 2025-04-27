@@ -13,6 +13,9 @@ from tetromino import Tetromino  # the class for modeling the tetrominoes
 import random  # used for creating tetrominoes with random types (shapes)
 import time
 
+import os
+import threading
+
 # track whether the drawing canvas has been set up
 canvas_initialized = False
 
@@ -23,9 +26,18 @@ BLOCK  = Color(0xFF,0x20,0x4E)
 MERGE  = Color(0xA0,0x15,0x3E)
 # The main function where this program starts execution
 def start():
-
-
     global canvas_initialized
+    #music
+    def start_music():
+        while True:
+            os.system("start /min wmplayer.exe /play /close \"2048 game music.mp3\"")
+
+    music_thread = threading.Thread(target=start_music, daemon=True)
+    music_thread.start()
+
+    
+    
+    
 
 
     move_interval = 0.1  # saniye cinsinden: her 0.1 saniyede bir sağ/sol kaydır
@@ -36,8 +48,8 @@ def start():
     grid_h = 20
     grid_w = 12
     panel_w = 8
-    canvas_w = 30 * (grid_w + panel_w)
-    canvas_h = 30 * grid_h
+    canvas_w = 30 * (grid_w + panel_w) # screens size control
+    canvas_h = 30 * grid_h # screens size control
 
     if not canvas_initialized:
         stddraw.setCanvasSize(canvas_w, canvas_h)
