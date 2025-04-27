@@ -11,10 +11,10 @@ import os  # the os module is used for file and directory operations
 from game_grid import GameGrid  # the class for modeling the game grid
 from tetromino import Tetromino  # the class for modeling the tetrominoes
 import random  # used for creating tetrominoes with random types (shapes)
-import time
 
-import os
-import threading
+
+
+
 
 # track whether the drawing canvas has been set up
 canvas_initialized = False
@@ -27,29 +27,14 @@ MERGE  = Color(0xA0,0x15,0x3E)
 # The main function where this program starts execution
 def start():
     global canvas_initialized
-    #music
-    def start_music():
-        while True:
-            os.system("start /min wmplayer.exe /play /close \"2048 game music.mp3\"")
-
-    music_thread = threading.Thread(target=start_music, daemon=True)
-    music_thread.start()
-
     
-    
-    
-
-
-    move_interval = 0.1  # saniye cinsinden: her 0.1 saniyede bir sağ/sol kaydır
-    last_move_time = time.time()
-
     stddraw.clearKeysTyped()#clear the keys typed
 
     grid_h = 20
     grid_w = 12
     panel_w = 8
-    canvas_w = 30 * (grid_w + panel_w) # screens size control
-    canvas_h = 30 * grid_h # screens size control
+    canvas_w = 40 * (grid_w + panel_w) # screens size control
+    canvas_h = 40 * grid_h # screens size control
 
     if not canvas_initialized:
         stddraw.setCanvasSize(canvas_w, canvas_h)
@@ -77,16 +62,15 @@ def start():
     grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
     
     #to do more smooth drop
-    drop_interval = 0.5  # seconds per row
-    last_drop_time = time.time()
+    
 
 
     #holds the info if game is paused. 
     is_paused = False
     #show main starting screen.
     display_game_menu(20, 20)
-    drop_interval_down_key = 0.05  
-    is_down_pressed = False 
+    
+    
     #main loop 
     while True:
         #checks if user paused the game by button
@@ -126,11 +110,8 @@ def start():
             stddraw.clearKeysTyped()
         
         if not is_paused:
-            now = time.time()
-            if now - last_drop_time >= drop_interval:
-                last_drop_time = now
             success = current_tetromino.move("down", grid)
-            last_drop_time = now
+            
         if not success:
             tiles, pos = current_tetromino.get_min_bounded_tile_matrix(True)
             game_over, gained = grid.update_grid(tiles, pos)
