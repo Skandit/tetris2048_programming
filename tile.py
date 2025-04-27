@@ -39,13 +39,13 @@ class Tile:
    # A method for drawing this tile at a given position with a given length
    def draw(self, pos):
     # Number'a göre renk seç
-    color = COLOR_PALETTE.get(self.number, Color(255, 255, 255))  # Bulamazsa beyaz yapar
+    color = COLOR_PALETTE.get(self.number, Color(255, 255, 255)) 
 
     stddraw.setPenColor(color)
-    stddraw.filledSquare(pos.x, pos.y, 0.5)  # Blok çizimi
+    stddraw.filledSquare(pos.x, pos.y, 0.5)  
 
     # Sayı yaz
-    stddraw.setPenColor(Color(0, 0, 0))  # Siyah yazı
+    stddraw.setPenColor(Color(0, 0, 0))  
     stddraw.setFontSize(18)
     stddraw.text(pos.x, pos.y, str(self.number))
 
