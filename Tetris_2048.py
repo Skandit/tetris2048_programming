@@ -96,16 +96,23 @@ def start():
         menuycords <= my <= menuycords + menuhcords):
                         is_paused = True
                         print("Stopped")
-                        display_pause_menu(20,20)
+                        choice1 = display_pause_menu(grid_h, grid_w + panel_w)
                         is_paused = False
-
+                        if choice1 == 'restart':
+                            return  # exit start() to trigger a full restart
+                        # if 'resume', continue the game loop
+                        continue
         if stddraw.hasNextKeyTyped():
             
             key = stddraw.nextKeyTyped()
             if key == "p":
-                is_paused = not is_paused
-                display_pause_menu(20, 20)
+                is_paused = True
+                choice = display_pause_menu(grid_h, grid_w + panel_w)
                 is_paused = False
+                if choice == 'restart':
+                    return  # exit start() to trigger a full restart
+                # if 'resume', continue the game loop
+                continue
             elif not is_paused and key in ("left", "right", "down", "r"):
                 if key in ("left", "right"):
                     current_tetromino.move(key, grid)
@@ -262,11 +269,12 @@ def display_pause_menu(grid_height, grid_width):
             mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
             if mouse_x >= button_resume_x and mouse_x <= button_resume_x + button_w:
                 if mouse_y >= button_resume_y and mouse_y <= button_resume_y + button_h:
-                    break  # break the loop to end the method and start the game
+                    return 'resume' # break the loop to end the method and start the game
             if mouse_x >= button_restart_x and mouse_x <= button_restart_x + button_w:
-                if mouse_y >= button_restart_y and mouse_y <= button_restart_y + button_h:
-                    break  # break the loop to end the method and start the game
-
+                if mouse_y >= button_restart_y and mouse_y <= button_restart_y + button_h: 
+                    return 'restart' # break the loop to end the method and start the game
+                
+                
 def display_restart_menu(grid_height,grid_width,score):
     background_color = Color( 64,  64,  64)
     button_color = Color(25, 255, 228)
