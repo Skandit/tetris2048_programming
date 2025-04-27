@@ -143,7 +143,7 @@ class GameGrid:
                 x = blc_position.x + col
                 y = blc_position.y + (n_rows - 1) - row
                 if self.is_inside(y, x):
-                    self.tile_matrix[y-1][x] = t
+                    self.tile_matrix[y][x] = t
                 else:
                     self.game_over = True
     if self.game_over:
