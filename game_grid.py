@@ -342,6 +342,7 @@ class GameGrid:
     stddraw.text(self.panel_x + self.panel_w / 2, self.panel_h - 2, f"SCORE: {self.score}")
 
 
+
     mw, mh = 6, 3
     mx = self.panel_x + (self.panel_w - mw) / 2
     my = self.panel_h - 6.5  
