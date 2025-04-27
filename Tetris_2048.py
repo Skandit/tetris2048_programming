@@ -36,8 +36,8 @@ def start():
     grid_h = 20
     grid_w = 12
     panel_w = 8
-    canvas_w = 40 * (grid_w + panel_w)
-    canvas_h = 40 * grid_h
+    canvas_w = 30 * (grid_w + panel_w)
+    canvas_h = 30 * grid_h
 
     if not canvas_initialized:
         stddraw.setCanvasSize(canvas_w, canvas_h)
@@ -122,10 +122,10 @@ def start():
                 for a in range(0, 20):
                     for b in range(12):
                         grid.tile_matrix[a][b] = None
-                display_restart_menu(grid_h, grid_w + panel_w )
+                display_restart_menu(grid_h, grid_w + panel_w, grid.score)
                 return
             if grid.has_won():
-                display_win_menu(grid_h, grid_w + panel_w,)
+                display_win_menu(grid_h, grid_w + panel_w, grid.score)
                 return
             else:
                 grid.score += gained
@@ -255,7 +255,7 @@ def display_pause_menu(grid_height, grid_width):
                 if mouse_y >= button_restart_y and mouse_y <= button_restart_y + button_h:
                     break  # break the loop to end the method and start the game
 
-def display_restart_menu(grid_height,grid_width):
+def display_restart_menu(grid_height,grid_width,score):
     background_color = Color( 64,  64,  64)
     button_color = Color(25, 255, 228)
     text_color = Color(31, 160, 239)
@@ -276,6 +276,8 @@ def display_restart_menu(grid_height,grid_width):
     stddraw.setFontSize(32)
     stddraw.setPenColor(text_color)
     stddraw.text(img_center_x, 8, "GAME OVER")
+    stddraw.setFontSize(24)
+    stddraw.text(img_center_x, 6.5, f"Score: {score}")
 
     # the dimensions for the restart game button
     button_w, button_h = grid_width - 1.5, 2
@@ -302,7 +304,7 @@ def display_restart_menu(grid_height,grid_width):
                 if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                     break  # break the loop to end the method and start the game
 
-def display_win_menu(grid_height,grid_width):
+def display_win_menu(grid_height,grid_width,score):
     background_color = Color( 64,  64,  64)
     button_color = Color(25, 255, 228)
     text_color = Color(31, 160, 239)
@@ -323,6 +325,8 @@ def display_win_menu(grid_height,grid_width):
     stddraw.setFontSize(32)
     stddraw.setPenColor(text_color)
     stddraw.text(img_center_x, 8, "YOU WON")
+    stddraw.setFontSize(24)
+    stddraw.text(img_center_x, 6.5, f"Score: {score}")
 
     # the dimensions for the restart game button
     button_w, button_h = grid_width - 1.5, 2
