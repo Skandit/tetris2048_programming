@@ -56,10 +56,10 @@ def start():
     menuwcords = grid.menu_w
 
 
-    grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
+    grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T','X']))
     current_tetromino = grid.next_tetromino
     grid.current_tetromino = current_tetromino
-    grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
+    grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T','X']))
     
     #to do more smooth drop
     
@@ -113,8 +113,12 @@ def start():
             success = current_tetromino.move("down", grid)
             
         if not success:
-            tiles, pos = current_tetromino.get_min_bounded_tile_matrix(True)
-            game_over, gained = grid.update_grid(tiles, pos)
+            if current_tetromino.type == "X":
+                game_over, gained = grid.update_grid(None, None)
+
+            else:
+                tiles, pos = current_tetromino.get_min_bounded_tile_matrix(True)
+                game_over, gained = grid.update_grid(tiles, pos)
 
             if game_over:
 
@@ -134,7 +138,7 @@ def start():
 
             current_tetromino = grid.next_tetromino
             grid.current_tetromino = current_tetromino
-            grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T']))
+            grid.next_tetromino = Tetromino(random.choice(['I','O','Z','S','L','J','T','X']))
 
         grid.display()
 
@@ -143,7 +147,7 @@ def start():
 # A function for creating random shaped tetrominoes to enter the game grid
 def create_tetromino():
     # the type (shape) of the tetromino is determined randomly
-    tetromino_types = ['I', 'O', 'Z', 'S', 'L', 'J', 'T']
+    tetromino_types = ['I', 'O', 'Z', 'S', 'L', 'J', 'T', 'X']
     random_index = random.randint(0, len(tetromino_types) - 1)
     random_type = tetromino_types[random_index]
     # create and return the tetromino

@@ -5,6 +5,7 @@ import numpy as np
 from lib.color import Color  # used for coloring the tiles
 
 COLOR_PALETTE = {
+    0:    Color(255, 255, 255),
     2:    Color(243, 255, 144),  
     4:    Color(220, 245, 120),  
     8:    Color(190, 235, 80),  
@@ -27,10 +28,14 @@ class Tile:
    font_family, font_size = "Arial", 14
 
    # A constructor that creates a tile with 2 as the number on it
-   def __init__(self, position = Point(0, 0)):
+   def __init__(self, position = Point(0, 0), is_x_block = False):
       # set the number on this tile
+      self.is_x_block = is_x_block
       numbers = [2,4]
-      self.number = int(np.random.choice(numbers,1))
+      if is_x_block:
+         numbers = [0]
+      else:
+         self.number = int(np.random.choice(numbers,1))
       # set the colors of this tile
       self.background_color = Color(151, 178, 199)  # background (tile) color
       self.foreground_color = Color(0, 100, 200)  # foreground (number) color
@@ -39,6 +44,11 @@ class Tile:
    # A method for drawing this tile at a given position with a given length
    def draw(self, pos):
     # Number'a göre renk seç
+    if self.is_x_block:
+      stddraw.setPenColor(Color(128, 0, 0))  
+      stddraw.filledSquare(pos.x, pos.y, 0.5)
+      return
+
     color = COLOR_PALETTE.get(self.number, Color(255, 255, 255)) 
 
     stddraw.setPenColor(color)

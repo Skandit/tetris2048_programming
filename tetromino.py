@@ -64,7 +64,10 @@ class Tetromino:
          occupied_cells.append((1,1))
          occupied_cells.append((2,1))
          occupied_cells.append((1,2))
-      
+      elif self.type == 'X':
+        n = 1
+        occupied_cells = [(0, 0)]  # (col, row)
+        self.tile_matrix = np.full((n, n), None)
       
          
       # create a matrix of numbered tiles based on the shape of this tetromino
@@ -74,7 +77,10 @@ class Tetromino:
       for i in range(len(occupied_cells)):
          col_index, row_index = occupied_cells[i][0], occupied_cells[i][1]
          # create a tile for each occupied cell of this tetromino
-         self.tile_matrix[row_index][col_index] = Tile()
+         if self.type == "X":
+            self.tile_matrix[row_index][col_index] = Tile(is_x_block=True)
+         else:
+            self.tile_matrix[row_index][col_index] = Tile()
       # initialize the position of this tetromino (as the bottom left cell in
       # the tile matrix) with a random horizontal position above the game grid
       self.bottom_left_cell = Point()

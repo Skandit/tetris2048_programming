@@ -136,6 +136,13 @@ class GameGrid:
     # if the game is over due to having any tile above the topmost grid row.
     # (This method returns True when the game is over and False otherwise.)
     def update_grid(self, tiles_to_lock, blc_position):
+        if self.current_tetromino.type == "X":
+            x_pos = self.current_tetromino.bottom_left_cell.x
+            for y in range(self.grid_height):
+                self.tile_matrix[y][x_pos] = None
+            self.current_tetromino = None
+            return False, 0
+
         self.current_tetromino = None
         total_gain = 0
         n_rows, n_cols = len(tiles_to_lock), len(tiles_to_lock[0])
